@@ -1,4 +1,11 @@
 #!/bin/bash
+
+
+chgrp munin /var/log/munin /var/run/munin /var/lib/munin
+chmod g+rw /var/log/munin /var/run/munin /var/lib/munin
+
+rm -f /var/run/munin/*
+
 NODES=${NODES:-}
 MUNIN_USER=${MUNIN_USER:-user}
 MUNIN_PASSWORD=${MUNIN_PASSWORD:-password}
@@ -70,7 +77,7 @@ echo $NODES
 # start apache
 /usr/sbin/nginx
 # show logs
-echo "Tailing /var/log/syslog..."
+echo "Tailing syslog and munin-update log..."
 tail -F /var/log/syslog /var/log/munin/munin-update.log & pid=$!
 
 sleep 1
