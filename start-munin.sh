@@ -54,6 +54,11 @@ chown munin:munin -R /var/cache/munin/www
 chmod g+w /var/cache/munin/www/index.html
 fi
 
+# remove err'ing xconsole rsyslog config
+mv /etc/rsyslog.d/50-default.conf /etc/rsyslog.d/50-default.conf.tmp
+head -n -4 /etc/rsyslog.d/50-default.conf.tmp > /etc/rsyslog.d/50-default.conf
+rm /etc/rsyslog.d/50-default.conf.tmp
+
 # start rsyslogd
 /usr/sbin/rsyslogd
 # start cron
