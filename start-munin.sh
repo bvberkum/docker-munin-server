@@ -7,6 +7,7 @@ chmod g+rw /var/log/munin /var/run/munin /var/lib/munin
 rm -f /var/run/munin/*
 
 NODES=${NODES:-}
+SNMP_NODES=${SNMP_NODES:-}
 MUNIN_USER=${MUNIN_USER:-user}
 MUNIN_PASSWORD=${MUNIN_PASSWORD:-password}
 
@@ -34,11 +35,36 @@ for NODE in $NODES
 do
   NAME=`echo $NODE | cut -d ":" -f1`
   HOST=`echo $NODE | cut -d ":" -f2`
+  PORT=`echo $NODE | cut -d ":" -f3`
+  if [ ${#PORT} -eq 0 ]; then
+      PORT=4949
+  fi
   if ! grep -q $HOST /etc/munin/munin.conf ; then
     cat << EOF >> /etc/munin/munin.conf
 [$NAME]
     address $HOST
     use_node_name yes
+    port $PORT
+
+EOF
+    fi
+done
+
+# generate node list
+for NODE in $SNMP_NODES
+do
+  NAME=`echo $NODE | cut -d ":" -f1`
+  HOST=`echo $NODE | cut -d ":" -f2`
+  PORT=`echo $NODE | cut -d ":" -f3`
+  if [ ${#PORT} -eq 0 ]; then
+      PORT=4949
+  fi
+  if ! grep -q $HOST /etc/munin/munin.conf ; then
+    cat << EOF >> /etc/munin/munin.conf
+[$NAME]
+    address $HOST
+    use_node_name no
+    port $PORT
 
 EOF
     fi
@@ -74,14 +100,16 @@ rm /etc/rsyslog.d/50-default.conf.tmp
 /usr/sbin/munin-node
 echo "Using the following munin nodes:"
 echo $NODES
-# start apache
+# start nginx
 /usr/sbin/nginx
 # show logs
 echo "Tailing syslog and munin-update log..."
 tail -F /var/log/syslog /var/log/munin/munin-update.log & pid=$!
+echo "tail -F running in $pid"
 
 sleep 1
 
-trap "kill $pid $(cat /var/run/munin/munin-node.pid) $(cat /var/run/nginx.pid) $(cat /var/run/crond.pid) $(cat /var/run/rsyslogd.pid)" TERM QUIT INT
+trap "echo 'stopping processes' ; kill $pid $(cat /var/run/munin/munin-node.pid) $(cat /var/run/nginx.pid) $(cat /var/run/crond.pid) $(cat /var/run/rsyslogd.pid)" SIGTERM SIGINT
 
+echo "Waiting for signal SIGINT/SIGTERM"
 wait
