@@ -6,8 +6,8 @@ chmod g+rw /var/log/munin /var/run/munin /var/lib/munin
 
 rm -f /var/run/munin/*
 
-NODES=${NODES:-}
-SNMP_NODES=${SNMP_NODES:-}
+NODES="${NODES:-}"
+SNMP_NODES="${SNMP_NODES:-}"
 MUNIN_USER=${MUNIN_USER:-user}
 MUNIN_PASSWORD=${MUNIN_PASSWORD:-password}
 MAIL_CONF_PATH='/var/lib/munin/.mailrc'
@@ -59,7 +59,7 @@ do
   if [ ${#PORT} -eq 0 ]; then
       PORT=4949
   fi
-  if ! grep -q $HOST /etc/munin/munin.conf ; then
+  if ! grep -q "'^$HOST$'" /etc/munin/munin.conf ; then
     cat << EOF >> /etc/munin/munin.conf
 [$NAME]
     address $HOST
@@ -67,6 +67,7 @@ do
     port $PORT
 
 EOF
+    echo "Added node '$NAME' '$HOST'"
     fi
 done
 
@@ -79,7 +80,7 @@ do
   if [ ${#PORT} -eq 0 ]; then
       PORT=4949
   fi
-  if ! grep -q $HOST /etc/munin/munin.conf ; then
+  if ! grep -q "'^$HOST$'" /etc/munin/munin.conf ; then
     cat << EOF >> /etc/munin/munin.conf
 [$NAME]
     address $HOST
@@ -87,6 +88,7 @@ do
     port $PORT
 
 EOF
+    echo "Added SNMP node '$NAME' '$HOST'"
     fi
 done
 
