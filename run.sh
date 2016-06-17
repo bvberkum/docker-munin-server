@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-export DCKR_CONF=$HOME/.conf/dckr hostname=vs1
+export hostname=vs1
 
 
 /usr/bin/docker run -d \
@@ -13,7 +13,6 @@ export DCKR_CONF=$HOME/.conf/dckr hostname=vs1
   -v $DCKR_VOL/munin/run:/var/run/munin:rw \
   -v $DCKR_VOL/munin/cache:/var/cache/munin:rw \
   -v /etc/localtime:/etc/localtime:ro \
-  -e NODES='vs1.lan:192.168.9.31 dandy.lan:192.168.9.3' \
   \
   bvberkum/munin-server
 
