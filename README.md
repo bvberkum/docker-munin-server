@@ -1,5 +1,9 @@
 # Docker image for munin server
 
+
+[![](https://images.microbadger.com/badges/image/bvberkum/munin-server.svg)](https://microbadger.com/images/bvberkum/munin-server "Get your own image badge on microbadger.com")
+
+
 ## Configuration
 
 All the configuration is done through the environment.
