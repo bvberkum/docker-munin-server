@@ -6,10 +6,10 @@ chmod g+rw /var/log/munin /var/run/munin /var/lib/munin
 
 rm -f /var/run/munin/*
 
-NODES="${NODES:-}"
-SNMP_NODES="${SNMP_NODES:-}"
-MUNIN_USER=${MUNIN_USER:-user}
-MUNIN_PASSWORD=${MUNIN_PASSWORD:-password}
+NODES=${NODES:-}
+SNMP_NODES=${SNMP_NODES:-}
+MUNIN_USERS=${MUNIN_USERS:-${MUNIN_USER:-user}}
+MUNIN_PASSWORDS=${MUNIN_PASSWORDS:-${MUNIN_PASSWORD:-password}}
 MAIL_CONF_PATH='/var/lib/munin/.mailrc'
 SMTP_USE_TLS=${SMTP_USE_TLS:-false}
 SMTP_ALWAYS_SEND=${SMTP_ALWAYS_SEND:-true}
@@ -17,6 +17,12 @@ SMTP_MESSAGE_DEFAULT='[${var:group};${var:host}] -> ${var:graph_title} -> warnin
 SMTP_MESSAGE="${SMTP_MESSAGE:-$SMTP_MESSAGE_DEFAULT}"
 
 truncate -s 0 "${MAIL_CONF_PATH}"
+
+# set volume ownerships
+chown -R munin:munin /var/log/munin
+chown -R munin:munin /var/lib/munin
+chown -R munin:munin /var/run/munin
+chown -R munin:munin /var/cache/munin
 
 if [ "${SMTP_USE_TLS}" = true ] ; then
   cat >> "${MAIL_CONF_PATH}" <<EOF
@@ -48,7 +54,16 @@ if  [ $rc -ne 0 -a -n "${ALERT_RECIPIENT}" -a -n "${ALERT_SENDER}" ] ; then
   fi
 fi
 
-[ -e /etc/munin/htpasswd.users ] || htpasswd -b -c /etc/munin/htpasswd.users "$MUNIN_USER" "$MUNIN_PASSWORD"
+# generate the Munin auth username/password file
+if [ ! -f /etc/munin/htpasswd.users ]; then
+  uc = 0
+  IFS=' ' read -ra ARR_USERS <<< "$MUNIN_USERS"
+  IFS=' ' read -ra ARR_PASSWORDS <<< "$MUNIN_PASSWORDS"
+  for u in "${ARR_USERS[@]}"; do
+    printf "${u}:`openssl passwd -apr1 ${ARR_PASSWORDS[uc]}`\n" >> /etc/munin/htpasswd.users
+    (( uc++ ))
+  done
+fi
 
 # generate node list
 for NODE in $NODES
@@ -122,6 +137,8 @@ rm /etc/rsyslog.d/50-default.conf.tmp
 /usr/sbin/munin-node
 echo "Using the following munin nodes:"
 echo $NODES
+# start spawn-cgi to enable CGI interface with munin (dynamix graph generation)
+spawn-fcgi -s /var/run/munin/fcgi-graph.sock -U munin -u munin -g munin /usr/lib/munin/cgi/munin-cgi-graph
 # start nginx
 /usr/sbin/nginx
 # show logs
