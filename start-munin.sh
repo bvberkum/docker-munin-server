@@ -133,6 +133,10 @@ rm /etc/rsyslog.d/50-default.conf.tmp
 /usr/sbin/rsyslogd
 # start cron
 /usr/sbin/cron
+# Issue: 'NUMBER OF HARD LINKS > 1' prevents cron exec
+# https://github.com/phusion/baseimage-docker/issues/198
+sleep 3
+touch /etc/crontab /etc/cron.d/*
 # start local munin-node
 /usr/sbin/munin-node
 echo "Using the following munin nodes:"
