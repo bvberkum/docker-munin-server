@@ -56,7 +56,7 @@ fi
 
 # generate the Munin auth username/password file
 if [ ! -f /etc/munin/htpasswd.users ]; then
-  uc = 0
+  uc=0
   IFS=' ' read -ra ARR_USERS <<< "$MUNIN_USERS"
   IFS=' ' read -ra ARR_PASSWORDS <<< "$MUNIN_PASSWORDS"
   for u in "${ARR_USERS[@]}"; do
