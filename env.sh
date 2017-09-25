@@ -1,4 +1,5 @@
 #!/bin/sh
+
 {
   echo hostname=$(hostname -s)
   echo domainname=$(hostname)
@@ -7,3 +8,8 @@
   echo MUNIN_PASSWORDS=$(whoami)
   echo NODES=boreas.zt
 } > .env
+
+export add_hostlist="$(
+  grep '[a-z-]*.zt' /etc/hosts |
+    awk '{print "--add-host "$2":"$1}' |
+      tr '\n' ' ' )"

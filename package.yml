@@ -9,7 +9,8 @@
     rm-docker:
       - docker rm -f ${hostname}-munin-server
     run-docker:
-      - docker run -d -P \
+      - docker run -d \
+          $add_hostlist \
           --name ${hostname}-munin-server \
           --env-file .env \
           --hostname munin.${domainname} \
