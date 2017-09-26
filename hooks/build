@@ -1,0 +1,4 @@
+#!/bin/sh
+docker build \
+    --build-arg BASE_TAG=$DOCKER_TAG \
+    -t $IMAGE_NAME .
