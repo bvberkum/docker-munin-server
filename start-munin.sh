@@ -1,13 +1,9 @@
 #!/bin/bash
 
 
-chgrp munin /var/log/munin /var/run/munin /var/lib/munin
-chmod g+rw /var/log/munin /var/run/munin /var/lib/munin
-
-rm -f /var/run/munin/*
-
 NODES=${NODES:-}
 SNMP_NODES=${SNMP_NODES:-}
+SSH_NODES=${SSH_NODES:-}
 MUNIN_USERS=${MUNIN_USERS:-${MUNIN_USER:-user}}
 MUNIN_PASSWORDS=${MUNIN_PASSWORDS:-${MUNIN_PASSWORD:-password}}
 MAIL_CONF_PATH='/var/lib/munin/.mailrc'
@@ -107,6 +103,26 @@ EOF
     fi
 done
 
+for SSH_NODE in $SSH_NODES
+do
+  NAME=`echo $SSH_NODE | cut -d ":" -f1`
+  HOST=`echo $SSH_NODE | cut -d ":" -f2`
+  PORT=`echo $SSH_NODE | cut -d ":" -f3`
+  if [ ${#PORT} -eq 0 ]; then
+      PORT=4949
+  fi
+  if ! grep -q "'^$HOST$'" /etc/munin/munin.conf ; then
+    cat << EOF >> /etc/munin/munin.conf
+[$NAME]
+    address ssh://$HOST/usr/bin/nc localhost 4949
+    use_node_name yes
+    port $PORT
+
+EOF
+    echo "Added SSH node '$NAME' '$HOST'"
+    fi
+done
+
 [ -d /var/cache/munin/www ] || mkdir /var/cache/munin/www
 # placeholder html to prevent permission error
 if [ ! -e /var/cache/munin/www/index.html ]; then
@@ -129,18 +145,24 @@ mv /etc/rsyslog.d/50-default.conf /etc/rsyslog.d/50-default.conf.tmp
 head -n -4 /etc/rsyslog.d/50-default.conf.tmp > /etc/rsyslog.d/50-default.conf
 rm /etc/rsyslog.d/50-default.conf.tmp
 
+chgrp munin /var/log/munin /var/run/munin /var/lib/munin
+chmod g+rw /var/log/munin /var/run/munin /var/lib/munin
+# Clear crashed run
+rm -f /var/run/munin/*
+
 # start rsyslogd
 /usr/sbin/rsyslogd
 # start cron
 /usr/sbin/cron
-# Issue: 'NUMBER OF HARD LINKS > 1' prevents cron exec
+# Issue: 'NUMBER OF HARD LINKS > 1' prevents cron exec in container
 # https://github.com/phusion/baseimage-docker/issues/198
-sleep 3
 touch /etc/crontab /etc/cron.d/*
 # start local munin-node
 /usr/sbin/munin-node
 echo "Using the following munin nodes:"
 echo $NODES
+echo "(ssh) $SSH_NODES"
+echo "(snmp) $SNMP_NODES"
 # start spawn-cgi to enable CGI interface with munin (dynamix graph generation)
 spawn-fcgi -s /var/run/munin/fcgi-graph.sock -U munin -u munin -g munin /usr/lib/munin/cgi/munin-cgi-graph
 # start nginx
