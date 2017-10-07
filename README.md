@@ -88,3 +88,35 @@ Munin has not run yet. Please try again in a few moments.
 
 Every 5 minutes munin-server will interrogate its nodes and build the graphs and store the data.
 That's only after the first data fetching operation that the first graphs will appear.
+
+## Testing nodes
+
+```
+# docker exec -ti <container-id-or-name> bash
+root@munin:/# apt-get install telnet
+root@munin:/# su - munin --shell=/bin/bash
+root@munin:/# grep address /etc/munin/munin.conf
+    [...]
+    address 10.147.17.19
+    [...]
+root@munin:/# telnet 10.147.17.19 munin
+Trying 10.147.17.19...
+Connected to 10.147.17.19.
+Escape character is '^]'.
+# munin node at <node>
+list
+cpu df df_inode entropy forks fw_packets if_docker0 if_err_docker0 if_err_eth0 if_err_veth2d4156a if_err_vethea78d47 if_err_zt0 if_eth0 if_veth2d4156a if_vethea78d47 if_zt0 interrupts ip_10.147.17.19 ip_10.8.82.203 ip_172.17.0.1 irqstats load memory netstat ntp_kernel_err ntp_kernel_pll_freq ntp_kernel_pll_off ntp_offset open_files open_inodes proc_pri processes swap threads uptime users vmstat
+quit
+Connection closed by foreign host.
+```
+
+SSH:
+```
+munin@munin:~$ grep ssh /etc/munin/munin.conf
+    address ssh://<user>@<node>/usr/bin/nc localhost 4949
+munin@munin:~$ ssh remotemonitor@boreas.zt usr/bin/nc localhost 4949
+munin@munin:~$ ssh <user>@<node> /usr/bin/nc localhost 4949
+# munin node at <node>
+list
+df df_inode cpu load memory uptime users
+```
