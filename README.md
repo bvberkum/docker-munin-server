@@ -119,3 +119,9 @@ munin@munin:~$ ssh <user>@<node> /usr/bin/nc localhost 4949
 list
 df df_inode cpu load memory uptime users
 ```
+
+## Autobuilds
+Branch           | Dockerfile                   | Tag
+---------------- | -----------------------------| ----------------------------
+latest           | ``/``                        | latest
+xenial           | ``/``                        | xenial
