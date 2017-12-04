@@ -120,6 +120,15 @@ list
 df df_inode cpu load memory uptime users
 ```
 
+## Docker Healthcheck
+
+To verify the server is running, the default image checks the index page and
+every node's uptime graph.
+
+The first check cannot be turned off. To turn off checking nodes set
+HEALTH_CHECK_NODES to empty, or provide a restricted list of node names.
+
+
 ## Autobuilds
 Branch           | Dockerfile                   | Tag
 ---------------- | -----------------------------| ----------------------------

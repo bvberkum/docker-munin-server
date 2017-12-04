@@ -24,7 +24,14 @@ ADD ./start-munin.sh /munin
 ADD ./munin-graph-logging.patch /usr/share/munin
 ADD ./munin-update-logging.patch /usr/share/munin
 
-RUN cd /usr/share/munin && patch munin-graph < munin-graph-logging.patch && patch munin-update < munin-update-logging.patch
+RUN cd /usr/share/munin \
+  && patch munin-graph < munin-graph-logging.patch \
+  && patch munin-update < munin-update-logging.patch
+
+ADD ./check-munin.sh /check
+ENV HEALTH_HOSTINFO=
+ENV HEALTH_CHECK_NODES=1
+HEALTHCHECK --interval=5m --timeout=10s --retries=3 CMD /check || exit 1
 
 EXPOSE 8080
 CMD ["bash", "/munin"]
