@@ -21,6 +21,11 @@
           -v /etc/localtime:/etc/localtime:ro \
           \
           bvberkum/munin-server:xenial
+  urls:
+    upstream: https://github.com/Scalingo/docker-munin-server
+    github: https://github.com/bvberkum/docker-munin-server
+    docker: https://hub.docker.com/r/bvberkum/munin-server
+    layers: https://microbadger.com/images/bvberkum/munin-server
 
 - type: application/vnd.dotmpe.environment
   id: bvberkum/munin-server-main

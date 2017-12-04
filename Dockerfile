@@ -5,8 +5,9 @@ MAINTAINER B. van Berkum <dev@dotmpe.com>
 RUN adduser --system --home /var/lib/munin --shell /bin/false --uid 1103 --group munin
 
 RUN apt-get update -qq && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y -qq openssh-client rsyslog cron munin munin-node nginx \
-       wget heirloom-mailx patch spawn-fcgi libcgi-fast-perl
+    apt-get install -y -qq \
+       openssh-client rsyslog cron munin munin-node nginx \
+       wget heirloom-mailx patch spawn-fcgi libcgi-fast-perl curl
 RUN rm /etc/nginx/sites-enabled/default && \
   mkdir -p /var/cache/munin/www && \
   chown munin:munin /var/cache/munin/www && \

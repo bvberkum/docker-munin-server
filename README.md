@@ -114,7 +114,6 @@ SSH:
 ```
 munin@munin:~$ grep ssh /etc/munin/munin.conf
     address ssh://<user>@<node>/usr/bin/nc localhost 4949
-munin@munin:~$ ssh remotemonitor@boreas.zt usr/bin/nc localhost 4949
 munin@munin:~$ ssh <user>@<node> /usr/bin/nc localhost 4949
 # munin node at <node>
 list
