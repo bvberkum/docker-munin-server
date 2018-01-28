@@ -1,4 +1,14 @@
 #!/bin/sh
+
+# Build script for hub.docker.com
+
+case "$DOCKER_TAG" in
+
+  dev )      BASE_TAG=latest ;;
+
+  * )        BASE_TAG=$DOCKER_TAG ;;
+esac
+
 docker build \
-    --build-arg BASE_TAG=$DOCKER_TAG \
+    --build-arg BASE_TAG=$BASE_TAG \
     -t $IMAGE_NAME .

@@ -2,7 +2,11 @@ ARG BASE_TAG=xenial
 FROM ubuntu:$BASE_TAG
 MAINTAINER B. van Berkum <dev@dotmpe.com>
 
-LABEL description="bvberkum/docker-munin-server forked from Scalingo/docker-munin-server"
+LABEL \
+  description="bvberkum/docker-munin-server forked from Scalingo/docker-munin-server" \
+  urls.hub=https://hub.docker.com/r/bvberkum/docker-munin-server \
+  urls.repo=https://github.com/bvberkum/munin-server
+
 
 RUN adduser --system --home /var/lib/munin --shell /bin/false --uid 1103 --group munin
 

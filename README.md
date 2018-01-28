@@ -134,8 +134,8 @@ HEALTH_CHECK_NODES to empty, or provide a restricted list of node names.
 
 
 ## Autobuilds
-Branch           | Dockerfile                   | Tag
----------------- | -----------------------------| ----------------------------
-latest           | ``/``                        | latest
-dev              | ``/``                        | dev
-xenial           | ``/``                        | xenial
+Branch      | Dockerfile    | Tag        | Base
+----------- | ------------- | ---------- | -----------------------------------
+latest      | ``/``         | latest     | ubuntu:latest
+dev         | ``/``         | dev        | ubuntu:latest
+xenial      | ``/``         | xenial     | ubuntu:xenial
