@@ -2,6 +2,8 @@ ARG BASE_TAG=xenial
 FROM ubuntu:$BASE_TAG
 MAINTAINER B. van Berkum <dev@dotmpe.com>
 
+LABEL description="bvberkum/docker-munin-server forked from Scalingo/docker-munin-server"
+
 RUN adduser --system --home /var/lib/munin --shell /bin/false --uid 1103 --group munin
 
 RUN apt-get update -qq && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive \

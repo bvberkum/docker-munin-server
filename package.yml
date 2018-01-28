@@ -1,4 +1,4 @@
-- type: application/vnd.dotmpe.project
+- type: application/vnd.org.wtwta.project
   id: bvberkum/munin-server
   env: . $HOME/.local/scalingo-munin-server.sh
   scripts:
@@ -27,6 +27,6 @@
     docker: https://hub.docker.com/r/bvberkum/munin-server
     layers: https://microbadger.com/images/bvberkum/munin-server
 
-- type: application/vnd.dotmpe.environment
+- type: application/vnd.org.wtwta.environment
   id: bvberkum/munin-server-main
   main: bvberkum/munin-server

@@ -2,6 +2,10 @@
 
 [![](https://images.microbadger.com/badges/image/bvberkum/munin-server.svg)](https://microbadger.com/images/bvberkum/munin-server "Get your own image badge on microbadger.com")
 
+Forked from [Scalingo/docker-munin-server](https://github.com/Scalingo/docker-munin-server)
+
+Hub: [bvberkum/munin-server](https://hub.docker.com/r/bvberkum/munin-server/)
+
 
 ## Configuration
 
@@ -133,4 +137,5 @@ HEALTH_CHECK_NODES to empty, or provide a restricted list of node names.
 Branch           | Dockerfile                   | Tag
 ---------------- | -----------------------------| ----------------------------
 latest           | ``/``                        | latest
+dev              | ``/``                        | dev
 xenial           | ``/``                        | xenial
