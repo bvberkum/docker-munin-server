@@ -6,9 +6,12 @@ case "$DOCKER_TAG" in
 
   dev )      BASE_TAG=latest ;;
 
-  * )        BASE_TAG=$DOCKER_TAG ;;
+  * )        BASE_TAG=latest ;;
 esac
 
 docker build \
     --build-arg BASE_TAG=$BASE_TAG \
     -t $IMAGE_NAME .
+
+
+#docker tag $IMAGE_NAME bvberkum/munin-server:latest
