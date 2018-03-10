@@ -4,9 +4,10 @@
 
 case "$DOCKER_TAG" in
 
-  dev )      BASE_TAG=latest ;;
+  latest )   BASE_TAG=xenial ;;
 
   * )        BASE_TAG=latest ;;
+
 esac
 
 docker build \
