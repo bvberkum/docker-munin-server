@@ -1,7 +1,11 @@
-- type: application/vnd.dotmpe.project
+- type: application/vnd.org.wtwta.project
   id: bvberkum/munin-server
-  env: . $HOME/.local/scalingo-munin-server.sh
+  env: . $HOME/.local/etc/scalingo-munin-server.sh
   scripts:
+    init:
+      - htd package update
+      - htd package remotes-init
+      - vc regenerate
     build-docker:
       - docker build \
           --build-arg BASE_TAG=xenial \
@@ -27,6 +31,10 @@
     docker: https://hub.docker.com/r/bvberkum/munin-server
     layers: https://microbadger.com/images/bvberkum/munin-server
 
-- type: application/vnd.dotmpe.environment
-  id: bvberkum/munin-server-main
+  repositories:
+    origin: git@github.com:bvberkum/docker-munin-server.git
+    upstream: git@github.com:Scalingo/docker-munin-server.git
+
   main: bvberkum/munin-server
+#- type: application/vnd.org.wtwta.environment
+#  id: bvberkum/munin-server-main
