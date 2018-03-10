@@ -1,11 +1,14 @@
-# Docker image for munin server
+# Docker image for munin server [![](https://images.microbadger.com/badges/image/bvberkum/munin-server.svg)](https://microbadger.com/images/bvberkum/munin-server "Get your own image badge on microbadger.com")
 
-[![](https://images.microbadger.com/badges/image/bvberkum/munin-server.svg)](https://microbadger.com/images/bvberkum/munin-server "Get your own image badge on microbadger.com")
+Fork of [Scalingo/docker-munin-server] keeping for customized [Docker hub] build settings.
 
-Forked from [Scalingo/docker-munin-server](https://github.com/Scalingo/docker-munin-server)
+- [#12] ssh nodes, and misc. #12
 
-Hub: [bvberkum/munin-server](https://hub.docker.com/r/bvberkum/munin-server/)
+[Scalingo/docker-munin-server]: https://github.com/Scalingo/docker-munin-server
+[#12]: https://github.com/Scalingo/docker-munin-server/pull/12
+[Docker Hub]: https://hub.docker.com/r/bvberkum/munin-server/
 
+-----
 
 ## Configuration
 
@@ -136,5 +139,5 @@ HEALTH_CHECK_NODES to empty, or provide a restricted list of node names.
 ## Autobuilds
 Branch          | Dockerfile   | Tag                       | Base
 --------------- | ------------ | ------------------------- | -----------------
-dev             | ``/``        | xenial,16.04              | ubuntu:latest
-``v\d+``        | ``/``        | ``{sourceref}``,latest    | ubuntu:latest
+dev             | ``/``        | latest                    | ubuntu:latest
+``/^v[0-9.]+/`` | ``/``        | ``{sourceref}``           | ubuntu:latest
